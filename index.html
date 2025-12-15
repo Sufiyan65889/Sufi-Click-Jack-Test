@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bank Login</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 500px; margin: 0 auto; }
+        .login { background: #f0f0f0; padding: 20px; border-radius: 5px; }
+        .dashboard { background: #e8f5e8; padding: 20px; border-radius: 5px; display: none; }
+        input { padding: 8px; margin: 5px; width: 200px; }
+        button { padding: 10px 15px; margin: 10px 0; cursor: pointer; }
+        .login-btn { background: #4CAF50; color: white; border: none; }
+        .logout-btn { background: #f44336; color: white; border: none; }
+        .status { margin-top: 10px; padding: 10px; border-radius: 3px; }
+        .logged-in { background: #d4edda; color: #155724; }
+    </style>
+</head>
+<body>
+    <h2>Bank Login Page</h2>
+    
+    <div class="login" id="loginForm">
+        <h3>Please Login</h3>
+        <p>Email: <br><input type="text" id="email" value="user@example.com"></p>
+        <p>Password: <br><input type="password" id="password" value="123456"></p>
+        <button class="login-btn" onclick="login()">Login</button>
+        <p><small>Use any credentials to test</small></p>
+    </div>
+    
+    <div class="dashboard" id="dashboard">
+        <h3>Welcome to Your Account</h3>
+        <p>Logged in as: <strong id="userEmail"></strong></p>
+        <p>Account Balance: <strong>$5,000.00</strong></p>
+        <button class="logout-btn" id="logoutBtn" onclick="logout()">Logout</button>
+        <div class="status logged-in" id="loginStatus">You are currently logged in</div>
+    </div>
+
+    <script>
+        function login() {
+            const email = document.getElementById('email').value;
+            if (email) {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('userEmail').textContent = email;
+                localStorage.setItem('loggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                updateLoginStatus();
+            }
+        }
+
+        function logout() {
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            localStorage.removeItem('loggedIn');
+            localStorage.removeItem('userEmail');
+            updateLoginStatus();
+            alert('You have been logged out!');
+        }
+
+        function updateLoginStatus() {
+            const status = document.getElementById('loginStatus');
+            if (localStorage.getItem('loggedIn') === 'true') {
+                status.textContent = 'You are currently logged in';
+                status.className = 'status logged-in';
+            } else {
+                status.textContent = 'You are currently logged out';
+                status.className = 'status';
+            }
+        }
+
+        // Check if already logged in
+        window.onload = function() {
+            if (localStorage.getItem('loggedIn') === 'true') {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('userEmail').textContent = localStorage.getItem('userEmail') || 'user@example.com';
+            }
+            updateLoginStatus();
+        };
+    </script>
+</body>
+</html>
